@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+DIR_TO_COPY="src/main"
+
+# Sets correct directories based on local dev machine vs Gradescope production
+if [ -f "/autograder/harness.py" ]; then
+    echo "[GS] Running on Gradescope container, using Gradescope vars"
+    DIR="/autograder/source/"
+    OUTPUT_JSON="/autograder/results/results.json"
+    STUDENT_SUBMISSION_DIR="/autograder/submission"
+    DESTINATION_JAVA_SRC="/autograder/source/staging/$DIR_TO_COPY"
+else 
+    echo "[GS] Running on local dev machine, using ./localautograder/ "
+    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+    OUTPUT_JSON="$DIR/localautograder/results/results.json"
+    STUDENT_SUBMISSION_DIR="$DIR/localautograder/submission"
+    DESTINATION_JAVA_SRC="$DIR/staging/$DIR_TO_COPY"
+fi
+
+
+###########################################################################################
+#
+#   Prepare student files for submission:
+#       - Unzip all zip files, search for /src/main/, and move to staging/src/main/
+#       - Print elegant error if src not found showing all files that were found
+#
+###########################################################################################
+cd $STUDENT_SUBMISSION_DIR
+
+# Unzip extraneous directories, wherever they may be:
+echo '[GS] Extracting zips in student submission...'
+find . -name "*.zip" | while read filename; do unzip -o -d "`dirname "$filename"`" "$filename"; done;
+
+# Clean out __MACOSX directories and hidden files
+find . -name "__MACOSX" -exec rm -rf {} \;
+
+# Find the /src/main
+# Copy student src/main/ to staging/main/ if exists. Otherwise exit and write error.
+STUDENT_SUBMISSION_JAVA_SRC=$(find . -path "*/$DIR_TO_COPY");
+if [ -n "$STUDENT_SUBMISSION_JAVA_SRC" ]
+then
+    echo "[GS] Found student $DIR_TO_COPY directory at $STUDENT_SUBMISSION_JAVA_SRC";
+    echo "  [GS] Copying $STUDENT_SUBMISSION_JAVA_SRC to $DESTINATION_JAVA_SRC";
+    rm -r $DESTINATION_JAVA_SRC/*
+    cp -r $STUDENT_SUBMISSION_JAVA_SRC/* $DESTINATION_JAVA_SRC/
+    echo "  [GS] Copy complete!"
+else
+    echo "[GS] Could not find $DIR_TO_COPY in unpacked student submission ($STUDENT_SUBMISSION_DIR). Exiting...";
+    FOUND_FILES=$(ls -R)
+
+    # Generate error for results.json
+    python $DIR/build_error_results.py -t "Unable to find $DIR_TO_COPY in student submission" -b \
+     "The following files were found in student submission. If no directory structure is displayed, 
+     try compressing your code before submitting it:
+    $FOUND_FILES" > $OUTPUT_JSON
+    exit 1;
+fi
+
+
+
+###########################################################################################
+#
+#   Start testing the student code
+#       - run mvn compile, write compiler output to output.json for student debugging
+#       - if that succeeds, just run mvn test
+#
+###########################################################################################
+
+cd $DIR/staging
+rm -rf $DIR/staging/target
+
+# Try to compile the maven project
+mvn compile | tee /tmp/compile.out
+if [ ${PIPESTATUS[0]} -eq 0 ]
+then
+    echo "[GS] mvn compile successful!"
+else
+    echo "[GS] mvn compile failed! Exiting..."
+    python $DIR/build_error_results.py -t "mvn compile failed" -i /tmp/compile.out > $OUTPUT_JSON
+    exit 1;
+fi
+
+# Compile tests
+# This helps students debug because an empty project will compile, but tests won't even run
+# (this will reveal if students are missing files that test cases rely on and output the missing classes)
+mvn test -DskipTests | tee /tmp/compile.out
+if [ ${PIPESTATUS[0]} -eq 0 ]
+then
+    echo "[GS] mvn test -DskipTests successful!"
+
+else
+    echo "[GS] mvn test -DskipTests failed! Exiting..."
+    MISSING_SYMBOLS=$(grep '[ERROR].*symbol:' /tmp/compile.out | sort | uniq)
+
+    # Generate error results.json
+    python $DIR/build_error_results.py -t "Missing classes" -b "Student code compiles but some required class files are missing (there may be repeats):
+    $MISSING_SYMBOLS" > $OUTPUT_JSON
+
+    exit 1;
+fi
+
+# run mvn test
+echo "[GS] Running maven tests"
+mvn test -Dtest=RunGradescopeTests.java
+
+# Sanity check (make sure results.json was created)
+if [ -f "$OUTPUT_JSON" ]; then
+    echo "[GS] Output json correctly generated"
+else 
+    echo "[GS] No output json was created! This should not happen "
+    python $DIR/build_error_results.py -t "AUTOGRADER_ERROR" -b "The autograder exited without grading student solution" > $OUTPUT_JSON
+    exit 1;
+fi

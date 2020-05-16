@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+###########################################################################################
+#
+#   Make autograder:
+#       - Cleans up files (all .DS_Store, staging/target, staging/src/main/java*)
+#       - Creates a top level zip of only the essential files required for the
+#           autograder to actually run
+#
+###########################################################################################
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+cd $DIR
+find . -name ".DS_Store" -exec rm -rf {} \;
+rm -rf $DIR/staging/src/main/java/*
+rm -rf $DIR/staging/target
+zip -r Autograder.zip build_error_results.py lib/ run_autograder setup.sh staging/
