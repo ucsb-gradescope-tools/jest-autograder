@@ -110,6 +110,7 @@ mvn test -Dtest=GradescopeTestRunner -DAUTOGRADER_RESULTS=$OUTPUT_JSON
 # Sanity check (make sure results.json was created)
 if [ -f "$OUTPUT_JSON" ]; then
     echo "[GS] Output json correctly generated"
+    cat $OUTPUT_JSON
 else 
     echo "[GS] No output json was created! This should not happen "
     python $DIR/tools/build_error_results.py -t "AUTOGRADER_ERROR" -b "The autograder exited without grading student solution. Contact the instructor for help." > $OUTPUT_JSON
