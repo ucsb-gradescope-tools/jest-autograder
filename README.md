@@ -14,4 +14,23 @@ Main idea: Student code is tested by copying their `src/main` directory to an ex
 
 
 ## Getting Started
-Coming soon
+Delete the sample project from `/staging` and copy a full Java project with a `pom.xml`. Edit the pom.xml and add the following dependencies:
+```xml
+    <!-- START DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
+    <dependency>
+        <groupId>com.github.tkutcher</groupId>
+        <artifactId>jgrade</artifactId>
+        <version>1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/../lib/jgrade.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.12</version>
+    </dependency>
+    <!-- END DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
+```
+
+Next, copy the `autograder` package from `lib/autograder` to `staging/src/test/java/autograder`. This contains the `GradescopeTestRunner` that will be called to run the tests, as well as the `GradescopeTestClass` annotation that will be used to identify Gradescope tests. Neither of these files will need to be edited.
+
