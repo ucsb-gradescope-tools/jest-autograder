@@ -1,7 +1,7 @@
 package edu.ucsb.cs56.ratcalc;
 
 import com.github.tkutcher.jgrade.gradedtest.GradedTest;
-import org.junit.Before;
+import autograder.GradescopeTestClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -9,6 +9,7 @@ import org.junit.rules.Timeout;
 import static org.junit.Assert.assertEquals;
 
 
+@GradescopeTestClass
 public class ExampleTest {
     @Rule
     public Timeout globalTimeout = Timeout.seconds(10);

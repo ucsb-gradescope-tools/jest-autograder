@@ -85,6 +85,8 @@
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
 
+
+    <!-- START DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
     <dependency>
       <groupId>com.github.tkutcher</groupId>
       <artifactId>jgrade</artifactId>
@@ -92,6 +94,12 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/../lib/jgrade.jar</systemPath>
   </dependency>
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.12</version>
+    </dependency>
+    <!-- END DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
     
   </dependencies>
 

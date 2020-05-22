@@ -1,0 +1,54 @@
+<table class="table ratcalc-table">
+    <tbody>
+        <tr class="number-row">
+            <td class="num-input"><input type="number" th:field="*{num1}" /></td>
+            <td></td>
+            <td class="num-input"><input type="number" th:field="*{num2}" /></td>
+            <td></td>
+            <td class="num-input"><input type="number" th:field="*{numResult}" readonly="readonly" /></td>
+        </tr>
+        <tr class="validation-row">
+            <td th:if="${#fields.hasErrors('num1')}" th:errors="*{num1}">Num1 Error</td>
+            <td th:unless="${#fields.hasErrors('num1')}"></td> <!-- placeholder -->
+            <td></td>
+            <td th:errors="*{num2}">Num2 Error</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr class="operator-row">
+            <td class="fraction-bar">
+                <hr />
+            </td>
+            <td class="operator" th:text="${ratCalcForm.op}">*</td>
+            <td class="fraction-bar">
+                <hr />
+            </td>
+            <td class="operator">=</td>
+            <td class="fraction-bar">
+                <hr />
+            </td>
+        </tr>
+        <tr class="number-row">
+            <td class="num-input"><input type="number" th:field="*{denom1}" /></td>
+            <td></td>
+            <td class="num-input"><input type="number" th:field="*{denom2}" /></td>
+            <td></td>
+            <td class="num-input"><input type="number" th:field="*{denomResult}" readonly="readonly" /></td>
+        </tr>
+        <tr class="validation-row">
+            <td th:if="${#fields.hasErrors('denom1')}" th:errors="*{denom1}">Denom1 Error</td>
+            <td th:unless="${#fields.hasErrors('denom1')}"></td> <!-- placeholder -->
+            <td></td>
+            <td th:if="${#fields.hasErrors('denom2')}" th:errors="*{denom2}">Denom2 Error</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr class="error-row">
+            <td th:text="${ratCalcForm.frac1Error}"></td>
+            <td></td>
+            <td th:text="${ratCalcForm.frac2Error}"></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
