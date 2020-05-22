@@ -33,7 +33,7 @@ Delete the sample project from `/staging` and copy a full Java project with a `p
     <!-- END DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
 ```
 
-Next, copy the `autograder` package from `lib/autograder` to `staging/src/test/java/autograder`. This contains the `GradescopeTestRunner` that will be called to run the tests, as well as the `GradescopeTestClass` annotation that will be used to identify Gradescope tests. Neither of these files will need to be edited.
+Next, copy the `autograder` package from `lib/autograder` to `staging/src/test/java/autograder`. This contains the `GradescopeTestRunner` that will be called to run the tests, as well as the `GradescopeTestClass` annotation that will be used to identify Gradescope tests. Neither of these files need to be touched.
 
 # Writing Graded Tests
 Add the `@GradescopeTestClass` annotation to **classes** that should be picked up by the autograder.
@@ -51,3 +51,6 @@ public class SampleTest {
     }
 }
 ```
+
+# Deployment
+Run `tools/make_autograder`. This will remove the `staging/src/main` folder, and zip the necessary files to upload to Gradescope. The final `Autograder.zip` file will appear in the root of the directory.

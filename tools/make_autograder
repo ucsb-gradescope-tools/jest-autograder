@@ -15,4 +15,4 @@ cd $DIR
 find . -name ".DS_Store" -exec rm -rf {} \;
 rm -rf $DIR/staging/src/main/java/*
 rm -rf $DIR/staging/target
-zip -r Autograder.zip build_error_results.py lib/ run_autograder setup.sh staging/
+zip -r Autograder.zip tools/ lib/ run_autograder setup.sh staging/
