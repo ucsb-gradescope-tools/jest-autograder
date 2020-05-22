@@ -83,6 +83,8 @@ fi
 # Compile tests
 # This helps students debug because an empty project will compile, but tests won't even run
 # (this will reveal if students are missing files that test cases rely on and output the missing classes)
+# This step also catches issues with student implementation where they might change the input parameters to a function
+# (Shows the student Symbol: or location: error messages but nothing else)
 mvn test -DskipTests | tee /tmp/compile.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
@@ -90,10 +92,11 @@ then
 
 else
     echo "[GS] mvn test -DskipTests failed! Exiting..."
-    MISSING_SYMBOLS=$(grep '[ERROR].*symbol:' /tmp/compile.out | sort | uniq)
+    MISSING_SYMBOLS=$(grep '[ERROR].*symbol:\|location' /tmp/compile.out | sort | uniq)
 
     # Generate error results.json
-    python $DIR/build_error_results.py -t "Missing classes" -b "Student code compiles but some required class files are missing (there may be repeats):
+    python $DIR/build_error_results.py -t "Compile with tests failed" -b "Student code compiles on its own, but does not compile with test cases.
+    Some required classes may be missing, or some function definitions may be mismatched from the specifications:
     $MISSING_SYMBOLS" > $OUTPUT_JSON
 
     exit 1;
