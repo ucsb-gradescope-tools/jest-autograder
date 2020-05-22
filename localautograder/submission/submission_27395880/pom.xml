@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- (0) <modelVersion/> -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- (1) <parent/> -->
+
+    <!-- (2) <groupId/> -->
+    <groupId>edu.ucsb.cs56.pconrad.menuitem</groupId>
+
+    <!-- (3) <artifactId/> -->
+
+    <artifactId>menuitem</artifactId>
+
+    <!-- (4) <version/> -->
+    <version>1.0-SNAPSHOT</version>
+
+    <!-- (5) <packaging/> -->
+    <!-- (6) <name/> -->
+    <!-- (7) <description/> -->
+
+    <description>Lab03 for CS56, W20</description>
+
+    <!-- (8) <url/> -->
+    <!-- (9) <inceptionYear/> -->
+    <!-- (10) <organization/> -->
+    <!-- (11) <licenses/> -->
+    <!-- (12) <developers/> -->
+    <!-- (13) <contributors/> -->
+    <!-- (14) <mailingLists/> -->
+    <!-- (15) <prerequisites/> -->
+    <!-- (16) <modules/> -->
+    <!-- (17) <scm/> -->
+    <!-- (18) <issueManagement/> -->
+    <!-- (19) <ciManagement/> -->
+    <!-- (20) <distributionManagement/> -->
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>file://${project.basedir}/docs/</url>
+        </site>
+    </distributionManagement>
+    <!-- (21) <properties/> -->
+
+    <properties>
+        <java.version>11</java.version>
+        <mainClass>edu.ucsb.cs56.pconrad.menuitem.MenuItem</mainClass>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    </properties>
+
+    <!-- (22) <dependencyManagement/> -->
+    <!-- (23) <dependencies/> -->
+
+    <dependencies>
+
+        <!-- JUnit unit testing (https://junit.org/) -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Test coverage ( https://www.eclemma.org/jacoco/ )-->
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.2</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- (24) <repositories/> -->
+    <!-- (25) <pluginRepositories/> -->
+    <!-- (26) <build/> -->
+
+    <build>
+        <plugins>
+
+            <!-- Make jar file executable -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- full package name of class with the main you want to run -->
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- configure compiler for Java 11 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+
+            <!-- Test case coverage report -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <!-- (27) <reporting/> -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <!-- any further custom report here -->
+        </plugins>
+    </reporting>
+    <!-- (28) <profiles/> -->
+</project>

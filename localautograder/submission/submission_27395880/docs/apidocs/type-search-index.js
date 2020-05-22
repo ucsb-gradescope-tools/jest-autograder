@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"edu.ucsb.cs56.pconrad.menuitem","l":"MenuItem"},{"p":"edu.ucsb.cs56.pconrad.menuitem","l":"MenuItem.TooNarrowException"}]
