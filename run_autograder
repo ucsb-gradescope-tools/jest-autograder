@@ -49,7 +49,7 @@ else
     FOUND_FILES=$(ls -R)
 
     # Generate error for results.json
-    python $DIR/build_error_results.py -t "Unable to find $DIR_TO_COPY in student submission" -b \
+    python $DIR/tools/build_error_results.py -t "Unable to find $DIR_TO_COPY in student submission" -b \
      "The following files were found in student submission. If no directory structure is displayed, 
      try compressing your code before submitting it:
     $FOUND_FILES" > $OUTPUT_JSON
@@ -76,7 +76,7 @@ then
     echo "[GS] mvn compile successful!"
 else
     echo "[GS] mvn compile failed! Exiting..."
-    python $DIR/build_error_results.py -t "mvn compile failed" -i /tmp/compile.out > $OUTPUT_JSON
+    python $DIR/tools/build_error_results.py -t "mvn compile failed" -i /tmp/compile.out > $OUTPUT_JSON
     exit 1;
 fi
 
@@ -95,7 +95,7 @@ else
     MISSING_SYMBOLS=$(grep '[ERROR].*symbol:\|location' /tmp/compile.out | sort | uniq)
 
     # Generate error results.json
-    python $DIR/build_error_results.py -t "Compile with tests failed" -b "Student code compiles on its own, but does not compile with test cases.
+    python $DIR/tools/build_error_results.py -t "Compile with tests failed" -b "Student code compiles on its own, but does not compile with test cases.
     Some required classes may be missing, or some function definitions may be mismatched from the specifications:
     $MISSING_SYMBOLS" > $OUTPUT_JSON
 
@@ -112,6 +112,6 @@ if [ -f "$OUTPUT_JSON" ]; then
     echo "[GS] Output json correctly generated"
 else 
     echo "[GS] No output json was created! This should not happen "
-    python $DIR/build_error_results.py -t "AUTOGRADER_ERROR" -b "The autograder exited without grading student solution. Contact the instructor for help." > $OUTPUT_JSON
+    python $DIR/tools/build_error_results.py -t "AUTOGRADER_ERROR" -b "The autograder exited without grading student solution. Contact the instructor for help." > $OUTPUT_JSON
     exit 1;
 fi
