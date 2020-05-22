@@ -42,6 +42,10 @@ Add `@Test` and `@GradedTest` annotations to each **test method**.
 
 Here is a simple example test class:
 ```java
+import autograder.GradescopeTestClass;
+import com.github.tkutcher.jgrade.gradedtest.GradedTest;
+import org.junit.Test;
+
 @GradescopeTestClass
 public class SampleTest {
     @Test
