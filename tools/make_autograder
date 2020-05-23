@@ -12,6 +12,9 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd $DIR
+
+cd ../ # change to root of autograder directory
+
 find . -name ".DS_Store" -exec rm -rf {} \;
 rm -rf $DIR/staging/src/main/java/*
 rm -rf $DIR/staging/target
