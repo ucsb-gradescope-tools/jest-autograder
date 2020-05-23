@@ -61,6 +61,7 @@ public class SampleTest {
     }
 }
 ```
+Note: the `name=""` field is required, otherwise the test will display on Gradescope as "Unnamed test". This is due to jgrade's implementation, but this is a good idea for a fork in the future.
 
 # Deployment
 Run `tools/make_autograder`. This will remove the `staging/src/main` folder, and zip the necessary files to upload to Gradescope. The final `Autograder.zip` file will appear in the root of the directory.
