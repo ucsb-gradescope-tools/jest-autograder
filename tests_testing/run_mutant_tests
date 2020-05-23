@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && cd ../ && pwd )" # Root directory
+PYTHON_TEST_TOOL="$DIR/tools/write_test_tests.py"
+echo $PYTHON_TEST_TOOL
+
+#######################################################################################################
+#
+#   Start testing mutant cases
+#       - This assumes the test suite we are testing has already been copied to test_staging/src/test
+#       - Loops through all the folders in mutant_solutions and
+#           - Copies mutant src/main to tests_staging/src/main
+#           - runs mvn test
+#           - saves results to test_staging/testsuite_results.json
+#
+#######################################################################################################
+
+cd "$DIR/tests_testing/"
+rm -f testsuite_results.json
+for d in mutant_solutions/*/ ; do
+    echo "[MutantTester] Trying solution $d"
+    rm -rf tests_staging/target
+    rm -rf tests_staging/src/main/*
+    cp -r $d/src/main/* tests_staging/src/main/
+    cd tests_staging
+    mvn -B test
+    cd ../
+    python3 "$PYTHON_TEST_TOOL" --xmldir=tests_staging/target/surefire-reports/ --label=$d --output=testsuite_results.json
+done

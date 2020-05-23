@@ -22,7 +22,7 @@ PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
 ###########################################################################################
 #
 #   Prepare student files for submission:
-#       - Unzip all zip files, search for /src/main/ AND OR /src/test, and move to proper staging folder
+#       - Unzip all zip files, search for /src/main/, and move to staging/src/main/
 #       - Print elegant error if src not found showing all files that were found
 #
 ###########################################################################################
@@ -70,7 +70,7 @@ if [ "$TEST_STUDENT_MAIN" = true ] ; then
 
 fi
 if [ "$TEST_STUDENT_TESTS" = true ] ; then
-    copy_student_directory "src/test" "$DIR/test_testing/tests_staging/src/test"
+    copy_student_directory "src/test" "$DIR/tests_testing/tests_staging/src/test"
     python3 $PYTHON_JSON_TOOL -p -t "Found required src/test directory in student submission"> $OUTPUT_DIR/results02.json
 fi
 
