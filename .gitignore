@@ -13,3 +13,4 @@ buildNumber.properties
 .travis.yml
 *.iml
 staging/.*
+Autograder.zip
