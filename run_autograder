@@ -22,7 +22,7 @@ PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
 ###########################################################################################
 #
 #   Prepare student files for submission:
-#       - Unzip all zip files, search for /src/main/, and move to staging/src/main/
+#       - Unzip all zip files, search for /src/main/ AND OR /src/test, and move to proper staging folder
 #       - Print elegant error if src not found showing all files that were found
 #
 ###########################################################################################
