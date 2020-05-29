@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TEST_STUDENT_MAIN=false
+TEST_STUDENT_MAIN=true
 TEST_STUDENT_TESTS=true
 
 # START: Sets correct directories based on local dev machine vs Gradescope production
@@ -66,14 +66,14 @@ copy_student_directory () {
 
 if [ "$TEST_STUDENT_MAIN" = true ] ; then
     copy_student_directory "src/main" "$DIR"/staging_main/src/main
-    python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
+    #python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
     "$DIR"/run_main_tests
 
 fi
 if [ "$TEST_STUDENT_TESTS" = true ] ; then
     copy_student_directory "src" "$DIR/staging_test/src"
-    python3 $PYTHON_JSON_TOOL -p -t "Found required src directory in student submission"> $OUTPUT_DIR/results02.json
-    #"$DIR"/tests_testing/run_mutant_tests
+    #python3 $PYTHON_JSON_TOOL -p -t "Found required src directory in student submission"> $OUTPUT_DIR/results02.json
+    "$DIR"/run_test_tests
 fi
 
 # Compile json results

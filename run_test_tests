@@ -13,6 +13,7 @@ else
     STUDENT_SUBMISSION_DIR="$DIR/localautograder/submission"
 fi
 PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
+PYTHON_MUTATIONS_PARSER="$DIR/tools/parse_mutations_csv.py"
 # END: Sets correct directories based on local dev machine vs Gradescope production
 
 ###########################################################################################
@@ -32,12 +33,15 @@ mvn -B test | tee /tmp/exec_tests.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Test Tests] student tests succeed on student solution"
-    python3 "$PYTHON_JSON_TOOL" -p -t "Student tests pass"> "$OUTPUT_DIR"/results10.json
+    python3 "$PYTHON_JSON_TOOL" -p -t "Student tests pass on student solution"> "$OUTPUT_DIR"/results20.json
 else
     echo "[GS - Test Tests] student tests fail on student solution. Exiting..."
-    python3 "$PYTHON_JSON_TOOL" -t "mvn compile failed" -i /tmp/exec_tests.out > "$OUTPUT_DIR"/results10.json
+    python3 "$PYTHON_JSON_TOOL" -t "mvn compile failed" -i /tmp/exec_tests.out > "$OUTPUT_DIR"/results20.json
     exit 1;
 fi
 
 echo "[GS - Test Tests] ] Running student tests with mutations"
 mvn -B -DwithHistory org.pitest:pitest-maven:mutationCoverage
+
+# Score the mutant coverage
+python3 "$PYTHON_MUTATIONS_PARSER" --reportpath target/pit-reports --max_points 20 --output "$OUTPUT_DIR"/results21.json

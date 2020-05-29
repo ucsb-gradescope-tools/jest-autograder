@@ -16,6 +16,8 @@ cd $DIR
 cd ../ # change to root of autograder directory
 
 find . -name ".DS_Store" -exec rm -rf {} \;
-rm -rf $DIR/staging/src/main/java/*
-rm -rf $DIR/staging/target
+rm -rf $DIR/staging_main/src/main/java/*
+rm -rf $DIR/staging_main/target
+rm -rf $DIR/staging_test/src/*
+rm -rf $DIR/staging_test/target
 zip -r Autograder.zip . -x "localautograder/*" "*.git*"
