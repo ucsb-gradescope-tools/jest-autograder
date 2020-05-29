@@ -9,15 +9,15 @@
 #
 ###########################################################################################
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+# Root folder of autograder
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && cd ../ && pwd )"
 
 cd $DIR
 
-cd ../ # change to root of autograder directory
-
 find . -name ".DS_Store" -exec rm -rf {} \;
-rm -rf $DIR/staging_main/src/main/java/*
-rm -rf $DIR/staging_main/target
-rm -rf $DIR/staging_test/src/*
-rm -rf $DIR/staging_test/target
+rm -f "$DIR"/Autograder.zip
+rm -rf "$DIR"/staging_main/src/main/java/*
+rm -rf "$DIR"/staging_main/target/
+rm -rf "$DIR"/staging_test/src/*
+rm -rf "$DIR"/staging_test/target/
 zip -r Autograder.zip . -x "localautograder/*" "*.git*"
