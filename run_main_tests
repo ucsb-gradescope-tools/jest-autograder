@@ -13,6 +13,7 @@ else
     STUDENT_SUBMISSION_DIR="$DIR/localautograder/submission"
 fi
 PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
+source "$DIR"/grading.config
 # END: Sets correct directories based on local dev machine vs Gradescope production
 
 ###########################################################################################

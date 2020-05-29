@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-TEST_STUDENT_MAIN=true
-TEST_STUDENT_TESTS=true
-
 # START: Sets correct directories based on local dev machine vs Gradescope production
 if [ -f "/autograder/harness.py" ]; then
     echo "[GS] Running on Gradescope container, using Gradescope vars"
@@ -16,6 +13,7 @@ else
     STUDENT_SUBMISSION_DIR="$DIR/localautograder/submission"
 fi
 PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
+source "$DIR"/grading.config
 # END: Sets correct directories based on local dev machine vs Gradescope production
 
 
@@ -64,13 +62,13 @@ copy_student_directory () {
     fi
 }
 
-if [ "$TEST_STUDENT_MAIN" = true ] ; then
+if [ "$CONFIG_TEST_STUDENT_MAIN" = true ] ; then
     copy_student_directory "src/main" "$DIR"/staging_main/src/main
     #python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
     "$DIR"/run_main_tests
 
 fi
-if [ "$TEST_STUDENT_TESTS" = true ] ; then
+if [ "$CONFIG_TEST_STUDENT_TESTS" = true ] ; then
     copy_student_directory "src" "$DIR/staging_test/src"
     #python3 $PYTHON_JSON_TOOL -p -t "Found required src directory in student submission"> $OUTPUT_DIR/results02.json
     "$DIR"/run_test_tests
