@@ -1,1 +1,0 @@
-{"tests": [{"name": "Run student test suite against multiple mutant codebases", "max_score": 5.0, "score": 0.9090909090909092, "output": "Correctly killed 2 mutants of 11 total mutants"}]}
