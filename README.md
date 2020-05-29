@@ -20,9 +20,9 @@ Main idea: Student code is tested by copying their `src/main` directory to an ex
 
 Define the scope of this autograder by editing `grading.config`:
 
-* **CONFIG_TEST_STUDENT_MAIN**=[true/false]
+* **CONFIG_TEST_STUDENT_MAIN**=true/false
     * Set to true to test student's implementation against instructor defined test cases
-* **CONFIG_TEST_STUDENT_TESTS**=[true/false]
+* **CONFIG_TEST_STUDENT_TESTS**=true/false
     * Set to true to test student's test suite against mutations of their own implementation
 * **CONFIG_MUTATIONS_MAX_SCORE**=NUM
     * Required if CONFIG_TEST_STUDENT_TESTS=true. The maximum points achievable if a student successfully kills all mutants.
