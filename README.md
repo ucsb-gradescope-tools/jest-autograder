@@ -16,6 +16,8 @@ Main idea: Student code is tested by copying their `src/main` directory to an ex
     - `make_autograder` - Zips only the essential autograder files, leaving out any sample solutions or other files
 
 # Basic Configuration
+**NOTE**: Make sure to configure the container specifications to the max level in the Gradescope autograder settings
+
 Define the scope of this autograder by editing `grading.config`:
 
 * **CONFIG_TEST_STUDENT_MAIN**=[true/false]
@@ -95,21 +97,21 @@ An instructor provided pom is required at `staging_test/pom.xml`. Add the follow
     <artifactId>pitest-maven</artifactId>
     <version>1.1.10</version>
     <configuration>
-    <targetClasses>
-        <param>edu.*</param>
-    </targetClasses>
-    <targetTests>
-        <param>edu.*</param>
-    </targetTests>
-    <outputFormats>
-        <outputFormat>HTML</outputFormat>
-        <outputFormat>CSV</outputFormat>
-    </outputFormats>
+        <targetClasses>
+            <param>edu.*</param>
+        </targetClasses>
+        <targetTests>
+            <param>edu.*</param>
+        </targetTests>
+        <outputFormats>
+            <outputFormat>HTML</outputFormat>
+            <outputFormat>CSV</outputFormat>
+        </outputFormats>
     </configuration>
 </plugin>
 ```
 
-That's it. Just make sure the `grading.confiig` has a proper points value assigned and that `CONFIG_TEST_STUDENT_TESTS=true` is set.
+That's it! Just make sure the `grading.config` has a proper points value assigned and that `CONFIG_TEST_STUDENT_TESTS=true` is set.
 
 
 # Deployment

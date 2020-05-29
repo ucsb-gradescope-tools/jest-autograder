@@ -32,7 +32,7 @@ mvn -B compile | tee /tmp/compile.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Main Tests] mvn compile successful!"
-    python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles without tests"> "$OUTPUT_DIR"/results10.json
+    #python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles without tests"> "$OUTPUT_DIR"/results10.json
 else
     echo "[GS - Main Tests] mvn compile failed! Exiting..."
     python3 "$PYTHON_JSON_TOOL" -t "mvn compile failed" -i /tmp/compile.out > "$OUTPUT_DIR"/results10.json
@@ -50,7 +50,7 @@ mvn -B test -DskipTests | tee /tmp/compile.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Main Tests] mvn test -DskipTests successful!"
-    python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles with tests"> "$OUTPUT_DIR"/results11.json
+    #python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles with tests"> "$OUTPUT_DIR"/results11.json
 
 else
     echo "[GS - Main Tests] mvn test -DskipTests failed! Exiting..."
