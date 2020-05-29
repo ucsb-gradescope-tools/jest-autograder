@@ -19,5 +19,5 @@ Autograder.zip
 .settings/
 
 localautograder/
-staging_main
-staging_test
+staging_main/*
+staging_test/*
