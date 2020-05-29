@@ -35,7 +35,7 @@ find . -name "*.zip" | while read filename; do unzip -o -d "`dirname "$filename"
 find . -name "__MACOSX" -exec rm -rf {} \;
 
 # Remove old results.json files
-rm -r $OUTPUT_DIR/*.json
+rm -r "$OUTPUT_DIR"/*.json
 
 # Searches student code for a DIR_TO_COPY($1), and copies it to DESTINATION_JAVA_SRC($2)
 copy_student_directory () {
@@ -51,27 +51,28 @@ copy_student_directory () {
         cp -r $STUDENT_SUBMISSION_JAVA_SRC/* $DESTINATION_JAVA_SRC/
         echo "  [GS] Copy complete!"
     else
-        echo "[GS] Could not find $DIR_TO_COPY in unpacked student submission ($STUDENT_SUBMISSION_DIR). Exiting...";
+        echo "[GS] Could not find "$DIR_TO_COPY" in unpacked student submission ("$STUDENT_SUBMISSION_DIR"). Exiting...";
         FOUND_FILES=$(ls -R)
 
         # Generate error for results.json
-        python3 $PYTHON_JSON_TOOL -t "Unable to find $DIR_TO_COPY in student submission" -b \
+        python3 "$PYTHON_JSON_TOOL" -t "Unable to find "$DIR_TO_COPY" in student submission" -b \
         "The following files were found in student submission. If no directory structure is displayed, 
         try compressing your code before submitting it:
-        $FOUND_FILES" > $OUTPUT_DIR/results00.json
+        $FOUND_FILES" > "$OUTPUT_DIR"/results00.json
         exit 1;
     fi
 }
 
 if [ "$TEST_STUDENT_MAIN" = true ] ; then
-    copy_student_directory "src/main" "$DIR/staging/src/main"
-    python3 $PYTHON_JSON_TOOL -p -t "Found required src/main directory in student submission"> $OUTPUT_DIR/results01.json
-    $DIR/run_main_tests
+    copy_student_directory "src/main" "$DIR"/staging/src/main
+    python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
+    "$DIR"/run_main_tests
 
 fi
 if [ "$TEST_STUDENT_TESTS" = true ] ; then
-    copy_student_directory "src/test" "$DIR/tests_testing/tests_staging/src/test"
+    copy_student_directory "src/test" "$DIR/test_testing/tests_staging/src/test"
     python3 $PYTHON_JSON_TOOL -p -t "Found required src/test directory in student submission"> $OUTPUT_DIR/results02.json
+    "$DIR"/tests_testing/run_mutant_tests
 fi
 
 # Compile json results

@@ -23,18 +23,18 @@ PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
 #
 ###########################################################################################
 
-cd $DIR/staging
-rm -rf $DIR/staging/target
+cd "$DIR"/staging
+rm -rf "$DIR"/staging/target
 
 # Try to compile the maven project
 mvn -B compile | tee /tmp/compile.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Main Tests] mvn compile successful!"
-    python3 $PYTHON_JSON_TOOL -p -t "Student code successfully compiles without tests"> $OUTPUT_DIR/results10.json
+    python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles without tests"> "$OUTPUT_DIR"/results10.json
 else
     echo "[GS - Main Tests] mvn compile failed! Exiting..."
-    python3 $PYTHON_JSON_TOOL -t "mvn compile failed" -i /tmp/compile.out > $OUTPUT_DIR/results10.json
+    python3 "$PYTHON_JSON_TOOL" -t "mvn compile failed" -i /tmp/compile.out > "$OUTPUT_DIR"/results10.json
     exit 1;
 fi
 
@@ -49,7 +49,7 @@ mvn -B test -DskipTests | tee /tmp/compile.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Main Tests] mvn test -DskipTests successful!"
-    python3 $PYTHON_JSON_TOOL -p -t "Student code successfully compiles with tests"> $OUTPUT_DIR/results11.json
+    python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles with tests"> "$OUTPUT_DIR"/results11.json
 
 else
     echo "[GS - Main Tests] mvn test -DskipTests failed! Exiting..."
@@ -58,7 +58,7 @@ else
     # Generate error results.json
     python3 $PYTHON_JSON_TOOL -t "Compile with tests failed" -b "Student code compiles on its own, but does not compile with test cases.
     Some required classes may be missing, or some function definitions may be mismatched from the specifications:
-    $MISSING_SYMBOLS" > $OUTPUT_DIR/results11.json
+    "$MISSING_SYMBOLS > "$OUTPUT_DIR"/results11.json
 
     exit 1;
 fi
@@ -67,4 +67,4 @@ fi
 
 # run mvn test
 echo "[GS - Main Tests] Running maven tests"
-mvn -B test -Dtest=GradescopeTestRunner -DAUTOGRADER_RESULTS=$OUTPUT_DIR/results12.json
+mvn -B test -Dtest=GradescopeTestRunner -DAUTOGRADER_RESULTS="$OUTPUT_DIR"/results12.json

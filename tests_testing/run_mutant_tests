@@ -15,7 +15,7 @@ echo $PYTHON_TEST_TOOL
 #
 #######################################################################################################
 
-cd "$DIR/tests_testing/"
+cd "$DIR"/tests_testing/
 rm -f testsuite_results.json
 for d in mutant_solutions/*/ ; do
     echo "[MutantTester] Trying solution $d"
