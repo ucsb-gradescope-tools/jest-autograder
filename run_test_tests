@@ -17,56 +17,27 @@ PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
 
 ###########################################################################################
 #
-#   Start testing the student test cases
-#       - copy solutions_to_test to tests_staging/src/main
-#       - run mvn test
-#       - use python tool to check if tests passed or failed
-#       - write test results to json
+#   Start testing the student code
+#       - run mvn compile, write compiler output to results.json for student debugging
+#       - if that succeeds, try compiling with tests (by running mvn test with no tests)
 #
 ###########################################################################################
 
-cd $DIR/test_testing/tests_staging
+cd "$DIR"/staging_test
 rm -rf target/
 
-# Try to compile the maven project
-mvn -B compile | tee /tmp/compile.out
-if [ ${PIPESTATUS[0]} -eq 0 ]
-then
-    echo "[GS - Main Tests] mvn compile successful!"
-    python3 $PYTHON_JSON_TOOL -p -t "Student code successfully compiles without tests"> $OUTPUT_DIR/results10.json
-else
-    echo "[GS - Main Tests] mvn compile failed! Exiting..."
-    python3 $PYTHON_JSON_TOOL -t "mvn compile failed" -i /tmp/compile.out > $OUTPUT_DIR/results10.json
-    exit 1;
-fi
-
-
-
-# Compile tests
-# This helps students debug because an empty project will compile, but tests won't even run
-# (this will reveal if students are missing files that test cases rely on and output the missing classes)
-# This step also catches issues with student implementation where they might change the input parameters to a function
-# (Shows the student Symbol: or location: error messages but nothing else)
-mvn -B test -DskipTests | tee /tmp/compile.out
-if [ ${PIPESTATUS[0]} -eq 0 ]
-then
-    echo "[GS - Main Tests] mvn test -DskipTests successful!"
-    python3 $PYTHON_JSON_TOOL -p -t "Student code successfully compiles with tests"> $OUTPUT_DIR/results11.json
-
-else
-    echo "[GS - Main Tests] mvn test -DskipTests failed! Exiting..."
-    MISSING_SYMBOLS=$(grep '[ERROR].*symbol:\|location' /tmp/compile.out | sort | uniq)
-
-    # Generate error results.json
-    python3 $PYTHON_JSON_TOOL -t "Compile with tests failed" -b "Student code compiles on its own, but does not compile with test cases.
-    Some required classes may be missing, or some function definitions may be mismatched from the specifications:
-    $MISSING_SYMBOLS" > $OUTPUT_DIR/results11.json
-
-    exit 1;
-fi
-
-
-
 # run mvn test
-echo "[GS - Main Tests] Running maven tests"
-mvn -B test -Dtest=GradescopeTestRunner -DAUTOGRADER_RESULTS=$OUTPUT_DIR/results12.json
+echo "[GS - Test Tests] Running maven tests"
+mvn -B test | tee /tmp/exec_tests.out
+if [ ${PIPESTATUS[0]} -eq 0 ]
+then
+    echo "[GS - Test Tests] student tests succeed on student solution"
+    python3 "$PYTHON_JSON_TOOL" -p -t "Student tests pass"> "$OUTPUT_DIR"/results10.json
+else
+    echo "[GS - Test Tests] student tests fail on student solution. Exiting..."
+    python3 "$PYTHON_JSON_TOOL" -t "mvn compile failed" -i /tmp/exec_tests.out > "$OUTPUT_DIR"/results10.json
+    exit 1;
+fi
+
+echo "[GS - Test Tests] ] Running student tests with mutations"
+mvn -B -DwithHistory org.pitest:pitest-maven:mutationCoverage

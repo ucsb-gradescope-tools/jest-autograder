@@ -23,8 +23,8 @@ PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
 #
 ###########################################################################################
 
-cd "$DIR"/staging
-rm -rf "$DIR"/staging/target
+cd "$DIR"/staging_main
+rm -rf "$DIR"/staging_main/target
 
 # Try to compile the maven project
 mvn -B compile | tee /tmp/compile.out
