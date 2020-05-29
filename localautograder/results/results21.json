@@ -1,1 +1,1 @@
-{"tests": [{"name": "Run student test suite against multiple mutant codebases", "max_score": 20.0, "score": 3.6363636363636367, "output": "Correctly identified 2 mutants of 11 total mutants"}]}
+{"tests": [{"name": "Run student test suite against multiple mutant codebases", "max_score": 20.0, "score": 3.64, "output": "Correctly identified 2 mutants of 11 total mutants"}]}

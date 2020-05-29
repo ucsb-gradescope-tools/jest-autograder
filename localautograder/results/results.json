@@ -1,1 +1,52 @@
-{"tests": [{"name": "Student code successfully compiles without tests", "max_score": 0, "score": 0, "output": ""}, {"name": "Student code successfully compiles with tests", "max_score": 0, "score": 0, "output": ""}, {"output": "", "score": 10, "number": "", "visibility": "visible", "max_score": 10, "name": "add(1,2)=3"}, {"output": "", "score": 10, "number": "", "visibility": "visible", "max_score": 10, "name": "Constructor with arguments - new Animal(\"Elewardo\", 5, 6)"}, {"output": "", "score": 10, "number": "", "visibility": "visible", "max_score": 10, "name": "Default constructor - new Animal()"}, {"name": "Student tests pass on student solution", "max_score": 0, "score": 0, "output": ""}, {"name": "Run student test suite against multiple mutant codebases", "max_score": 20.0, "score": 3.6363636363636367, "output": "Correctly identified 2 mutants of 11 total mutants"}]}
+{
+    "tests": [
+        {
+            "name": "Student code successfully compiles without tests",
+            "max_score": 0,
+            "score": 0,
+            "output": ""
+        },
+        {
+            "name": "Student code successfully compiles with tests",
+            "max_score": 0,
+            "score": 0,
+            "output": ""
+        },
+        {
+            "output": "",
+            "score": 10,
+            "number": "",
+            "visibility": "visible",
+            "max_score": 10,
+            "name": "add(1,2)=3"
+        },
+        {
+            "output": "",
+            "score": 10,
+            "number": "",
+            "visibility": "visible",
+            "max_score": 10,
+            "name": "Constructor with arguments - new Animal(\"Elewardo\", 5, 6)"
+        },
+        {
+            "output": "",
+            "score": 10,
+            "number": "",
+            "visibility": "visible",
+            "max_score": 10,
+            "name": "Default constructor - new Animal()"
+        },
+        {
+            "name": "Student tests pass on student solution",
+            "max_score": 0,
+            "score": 0,
+            "output": ""
+        },
+        {
+            "name": "Run student test suite against multiple mutant codebases",
+            "max_score": 20.0,
+            "score": 3.64,
+            "output": "Correctly identified 2 mutants of 11 total mutants"
+        }
+    ]
+}

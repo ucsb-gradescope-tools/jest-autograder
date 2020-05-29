@@ -25,7 +25,7 @@ if args.reportpath != None and args.max_points != None and args.output != None:
     the_test = {
         "name": "Run student test suite against multiple mutant codebases", 
         "max_score": float(args.max_points), 
-        "score": score,
+        "score": round(score, 2),
         "output":"Correctly identified " + str(killed) + " mutants of " + str(total) + " total mutants"
         }
     with open(args.output, 'w') as outfile:
