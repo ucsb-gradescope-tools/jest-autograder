@@ -17,3 +17,7 @@ Autograder.zip
 .classpath
 .project
 .settings/
+
+localautograder/
+staging_main/*
+staging_test/*

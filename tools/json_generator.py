@@ -5,13 +5,23 @@ import argparse
 import os
 from pathlib import Path
 
+
+########################################################################################
+# This python script is a helper to generate informational results.json output in the 
+# proper Gradescope format. The ideal use is that several results.json files are 
+# generated throughout the autograder's run and then they are combined at the very end. 
+# These are created with a score of 0/1 or 0/0 only.
+#
+# NOTE: This script does not write to files. We pipe to a file in shell instead.
+########################################################################################
+
 # Initialize command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("-t", "--title", help="Set result title")
-parser.add_argument("-b", "--body", help="Set result body contents")
-parser.add_argument("-i", "--input", help="Read file as body contents")
-parser.add_argument("-c", "--combine", help="combine all json files in a folder and produce a single output file")
-parser.add_argument("-p", "--passtest", help="Create test with 0/0 points", action='store_true')
+parser.add_argument("-t", "--title", help="Result title")
+parser.add_argument("-b", "--body", help="Result body")
+parser.add_argument("-i", "--input", help="Input file to read as results body instead of --body")
+parser.add_argument("-c", "--combine", help="Combine all the json files in a specified folder and produce a single combined output")
+parser.add_argument("-p", "--passtest", help="Grade the test as 0/0 (passing). If not set, the grade will be 0/1", action='store_true')
 
 args = parser.parse_args()
 
@@ -46,8 +56,11 @@ if args.combine != None:
     json_files = [p for p in sorted(os.listdir(args.combine), key=lambda x: os.path.getctime(os.path.join(args.combine, x))) if p.endswith(".json")]
     for json_file in json_files:
         with open(os.path.join(args.combine, json_file)) as f:
-            data = json.load(f)
-            results.extend(data["tests"])
+            try:
+                data = json.load(f)
+                results.extend(data["tests"])
+            except:
+                print("[json_generator] Unable to read", json_file, ", skipping")
     json_output_as_dict = { "tests" : results }
     with open(os.path.join(args.combine, "results.json"), 'w') as outfile:
         json.dump(json_output_as_dict, outfile)

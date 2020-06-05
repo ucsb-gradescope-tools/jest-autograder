@@ -13,6 +13,7 @@ else
     STUDENT_SUBMISSION_DIR="$DIR/localautograder/submission"
 fi
 PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
+source "$DIR"/grading.config
 # END: Sets correct directories based on local dev machine vs Gradescope production
 
 ###########################################################################################
@@ -23,15 +24,19 @@ PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
 #
 ###########################################################################################
 
-cd "$DIR"/staging
-rm -rf "$DIR"/staging/target
+cd "$DIR"/staging_main
+rm -rf "$DIR"/staging_main/target
 
 # Try to compile the maven project
 mvn -B compile | tee /tmp/compile.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Main Tests] mvn compile successful!"
-    python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles without tests"> "$OUTPUT_DIR"/results10.json
+
+    # Optionally output successful mvn compile message
+    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+        python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles without tests"> "$OUTPUT_DIR"/results10.json
+    fi
 else
     echo "[GS - Main Tests] mvn compile failed! Exiting..."
     python3 "$PYTHON_JSON_TOOL" -t "mvn compile failed" -i /tmp/compile.out > "$OUTPUT_DIR"/results10.json
@@ -49,7 +54,11 @@ mvn -B test -DskipTests | tee /tmp/compile.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Main Tests] mvn test -DskipTests successful!"
-    python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles with tests"> "$OUTPUT_DIR"/results11.json
+
+    # Optionally output successful mvn test -DskipTests message
+    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+        python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles with tests"> "$OUTPUT_DIR"/results11.json
+    fi
 
 else
     echo "[GS - Main Tests] mvn test -DskipTests failed! Exiting..."

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-TEST_STUDENT_MAIN=true
-TEST_STUDENT_TESTS=true
-
 # START: Sets correct directories based on local dev machine vs Gradescope production
 if [ -f "/autograder/harness.py" ]; then
     echo "[GS] Running on Gradescope container, using Gradescope vars"
@@ -16,6 +13,7 @@ else
     STUDENT_SUBMISSION_DIR="$DIR/localautograder/submission"
 fi
 PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
+source "$DIR"/grading.config
 # END: Sets correct directories based on local dev machine vs Gradescope production
 
 
@@ -38,6 +36,7 @@ find . -name "__MACOSX" -exec rm -rf {} \;
 rm -r "$OUTPUT_DIR"/*.json
 
 # Searches student code for a DIR_TO_COPY($1), and copies it to DESTINATION_JAVA_SRC($2)
+# Called below
 copy_student_directory () {
     DIR_TO_COPY=$1
     DESTINATION_JAVA_SRC=$2
@@ -63,16 +62,25 @@ copy_student_directory () {
     fi
 }
 
-if [ "$TEST_STUDENT_MAIN" = true ] ; then
-    copy_student_directory "src/main" "$DIR"/staging/src/main
-    python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
+if [ "$CONFIG_TEST_STUDENT_MAIN" = true ] ; then
+    copy_student_directory "src/main" "$DIR"/staging_main/src/main
+
+    # Optionally output successful finding of src/main
+    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+        python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
+    fi
+
     "$DIR"/run_main_tests
 
 fi
-if [ "$TEST_STUDENT_TESTS" = true ] ; then
-    copy_student_directory "src/test" "$DIR/test_testing/tests_staging/src/test"
-    python3 $PYTHON_JSON_TOOL -p -t "Found required src/test directory in student submission"> $OUTPUT_DIR/results02.json
-    "$DIR"/tests_testing/run_mutant_tests
+if [ "$CONFIG_TEST_STUDENT_TESTS" = true ] ; then
+    copy_student_directory "src" "$DIR/staging_test/src"
+
+    # Optionally output successful finding of src/
+    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+        python3 $PYTHON_JSON_TOOL -p -t "Found required src directory in student submission"> $OUTPUT_DIR/results02.json
+    fi
+    "$DIR"/run_test_tests
 fi
 
 # Compile json results
