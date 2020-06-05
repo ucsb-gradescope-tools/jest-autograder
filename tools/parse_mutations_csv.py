@@ -49,7 +49,7 @@ if args.reportpath != None and args.max_points != None and args.output != None:
                 verbose_log += "[" + r[0] + "] " + r[5] + "\t\t" + mutator + " on " + classname + "\n"
 
         score = (killed/total) * float(args.max_points)
-        output = "Correctly identified " + str(killed) + " mutants of " + str(total) + " total mutants"
+        output = "Successfully killed " + str(killed) + " mutants of " + str(total) + " total mutants"
     except:
         score = 0
         output = "An error occured while running mutation tests"

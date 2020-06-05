@@ -46,8 +46,11 @@ if args.combine != None:
     json_files = [p for p in sorted(os.listdir(args.combine), key=lambda x: os.path.getctime(os.path.join(args.combine, x))) if p.endswith(".json")]
     for json_file in json_files:
         with open(os.path.join(args.combine, json_file)) as f:
-            data = json.load(f)
-            results.extend(data["tests"])
+            try:
+                data = json.load(f)
+                results.extend(data["tests"])
+            except:
+                print("[json_generator] Unable to read", json_file, ", skipping")
     json_output_as_dict = { "tests" : results }
     with open(os.path.join(args.combine, "results.json"), 'w') as outfile:
         json.dump(json_output_as_dict, outfile)

@@ -34,7 +34,10 @@ mvn -B test | tee /tmp/exec_tests.out
 if [ ${PIPESTATUS[0]} -eq 0 ]
 then
     echo "[GS - Test Tests] student tests succeed on student solution"
-    #python3 "$PYTHON_JSON_TOOL" -p -t "Student tests pass on student solution"> "$OUTPUT_DIR"/results20.json
+    # Optionally output successful mvn test results
+    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+        python3 "$PYTHON_JSON_TOOL" -p -t "Student tests pass on student solution"> "$OUTPUT_DIR"/results20.json
+    fi
 else
     echo "[GS - Test Tests] student tests fail on student solution. Exiting..."
     python3 "$PYTHON_JSON_TOOL" -t "Student tests fail on student solution" -i /tmp/exec_tests.out > "$OUTPUT_DIR"/results20.json
@@ -42,7 +45,7 @@ else
 fi
 
 echo "[GS - Test Tests] ] Running student tests with mutations"
-mvn -B -DwithHistory org.pitest:pitest-maven:mutationCoverage
+mvn -B org.pitest:pitest-maven:mutationCoverage
 
 # Score the mutant coverage
 python3 "$PYTHON_MUTATIONS_PARSER" --reportpath target/pit-reports --max_points $CONFIG_MUTATIONS_MAX_SCORE --verbose $CONFIG_MUTATIONS_VERBOSE --output "$OUTPUT_DIR"/results21.json

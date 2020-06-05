@@ -64,13 +64,22 @@ copy_student_directory () {
 
 if [ "$CONFIG_TEST_STUDENT_MAIN" = true ] ; then
     copy_student_directory "src/main" "$DIR"/staging_main/src/main
-    #python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
+
+    # Optionally output successful finding of src/main
+    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+        python3 "$PYTHON_JSON_TOOL" -p -t "Found required src/main directory in student submission"> "$OUTPUT_DIR"/results01.json
+    fi
+
     "$DIR"/run_main_tests
 
 fi
 if [ "$CONFIG_TEST_STUDENT_TESTS" = true ] ; then
     copy_student_directory "src" "$DIR/staging_test/src"
-    #python3 $PYTHON_JSON_TOOL -p -t "Found required src directory in student submission"> $OUTPUT_DIR/results02.json
+
+    # Optionally output successful finding of src/
+    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+        python3 $PYTHON_JSON_TOOL -p -t "Found required src directory in student submission"> $OUTPUT_DIR/results02.json
+    fi
     "$DIR"/run_test_tests
 fi
 

@@ -1,16 +1,16 @@
 # Maven Gradescope Autograder
 
-This is a reimplementation of the UCSB maven autograder using a [more modern Java grading tool](https://github.com/tkutcher/jgrade)
+This is a reimplementation of the UCSB maven autograder using a [more modern Java grading tool - JGrade](https://github.com/tkutcher/jgrade)
 
 Main idea: Student code is tested by copying their `src/main` directory to an existing maven project (located at `staging/`) with instructor unit tests and running `mvn test` to grade the student's code.
 
 ## File structure:
 - `staging_main/` - The maven project used to run tests. Student code will be copied into `src/main` and the instructor will configure the `pom.xml` and `src/test` classes
-- `staging_test/` - The maven project used to test the student's tests. Student's entire `src` directory will be copied to `staging_test/` (but the instructor will configure the pom.xml). Student's code will be tested with mutations.
+- `staging_test/` - The maven project used to test the student's tests. Student's entire `src` directory will be copied to `staging_test/` and the instructor will provide the `pom.xml`. Student's code will be tested with mutations.
 - `localautograder/` - `run_autograder` automatically looks here instead of `/autograder/` when the script is run on a dev machine. No configuration is necessary for this to work.
     - `localautograder/submission` = `/autograder/submission`
     - `localautograder/results` = `/autograder/results`
-- `tools/` - Contains some useful tools
+- `tools/` - Contains some useful tools. Read more at [tools/README.md](tools/README.md)
     - `json_generator.py` - Used as a helper to write Gradescope json files from the `run_autograder` script
     - `parse_mutations_csv.py` - Used to parse the results of mutation testing and write results to Gradescope json
     - `make_autograder` - Zips only the essential autograder files, leaving out any sample solutions or other files
@@ -18,14 +18,20 @@ Main idea: Student code is tested by copying their `src/main` directory to an ex
 # Basic Configuration
 **NOTE**: Make sure to configure the container specifications to the max level in the Gradescope autograder settings
 
-Define the scope of this autograder by editing `grading.config`:
+Define the scope of this autograder by editing `grading.config`. Each option should be set as `true` or `false` (except MAX_SCORE):
 
-* **CONFIG_TEST_STUDENT_MAIN**=true/false
-    * Set to true to test student's implementation against instructor defined test cases
-* **CONFIG_TEST_STUDENT_TESTS**=true/false
-    * Set to true to test student's test suite against mutations of their own implementation
+* **CONFIG_OUTPUT_PASSING_DEBUG_TESTS**
+    * Set to true to output sanity checks that pass to Gradescope. ie: `Student code successfully compiles without tests`
+
+* **CONFIG_TEST_STUDENT_MAIN**
+    * Set to true to test student's implementation against instructor defined graded test cases and `pom.xml`.
+
+* **CONFIG_TEST_STUDENT_TESTS**
+    * Set to true to test student's test suite against mutations of their own implementation with the instructor `pom.xml`.
 * **CONFIG_MUTATIONS_MAX_SCORE**=NUM
     * Required if CONFIG_TEST_STUDENT_TESTS=true. The maximum points achievable if a student successfully kills all mutants.
+* **CONFIG_MUTATIONS_VERBOSE**
+    * Output detailed mutant slaying results to Gradescope. If false, only the number of mutants killed and number of total mutants will be displayed.
 
 
 # Configuring Testing For Student src/main With Instructor Tests
@@ -97,9 +103,11 @@ An instructor provided pom is required at `staging_test/pom.xml`. Add the follow
     <artifactId>pitest-maven</artifactId>
     <version>1.5.2</version>
     <configuration>
+        <!-- Classes to mutate-->
         <targetClasses>
             <param>edu.*</param>
         </targetClasses>
+        <!-- Test classes to mutate instances of above classes -->
         <targetTests>
             <param>edu.*</param>
         </targetTests>
@@ -107,6 +115,8 @@ An instructor provided pom is required at `staging_test/pom.xml`. Add the follow
             <outputFormat>HTML</outputFormat>
             <outputFormat>CSV</outputFormat>
         </outputFormats>
+        <!-- Define extra time so Spring Boot tests don't time out-->
+        <timeoutConstant>30000</timeoutConstant>
     </configuration>
 </plugin>
 ```
