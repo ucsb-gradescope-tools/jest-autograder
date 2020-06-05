@@ -3,6 +3,11 @@ import os
 import csv
 import json
 
+########################################################################################
+# This python script is a helper to find and convert the mutation results csv to a
+# proper Gradescope json output file.
+########################################################################################
+
 # Used in argument parsing for verbose option
 def str2bool(v):
     if isinstance(v, bool):
@@ -17,9 +22,9 @@ def str2bool(v):
 # Initialize command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--reportpath", help="Directory for pit-reports")
-parser.add_argument("--max_points", help="Maximum points for the assignment, divided among the test cases")
+parser.add_argument("--max_points", help="Maximum points for the testing portion of assignment, divided among mutants")
 parser.add_argument("-o", "--output", help="Json file to output")
-parser.add_argument("-v", "--verbose", help="Include specific details for the results of mutation tests versus just showing quantity passed", type=str2bool, nargs='?', const=True, default=False)
+parser.add_argument("-v", "--verbose", help="Include specific details for the results of each mutation. If not set, student will just see mutations killed out of total mutations.", type=str2bool, nargs='?', const=True, default=False)
 args = parser.parse_args()
 
 if args.reportpath != None and args.max_points != None and args.output != None:

@@ -84,7 +84,7 @@ public class SampleTest {
 Note: the `name=""` field is required, otherwise the test will display on Gradescope as "Unnamed test". This is due to jgrade's implementation, but this is a good idea for a fork of jgrade (or vscode plugin) in the future.
 
 # Configuring Testing For Student src/test
-To test the student's test suite, we will use mutation testing. At a high level, this is accomplished by copying their entire `src` submission to `staging_test` and running `mvn org.pitest:pitest-maven:mutationCoverage`.
+To test the student's test suite, we will use mutation testing. At a high level, this is accomplished by copying their entire `src` submission to `staging_test` with an instructor provided `pom.xml` and running `mvn org.pitest:pitest-maven:mutationCoverage`.
 
 ## Setup the pom.xml
 An instructor provided pom is required at `staging_test/pom.xml`. Add the following to the pom.xml:

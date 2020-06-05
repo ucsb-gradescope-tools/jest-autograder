@@ -5,13 +5,23 @@ import argparse
 import os
 from pathlib import Path
 
+
+########################################################################################
+# This python script is a helper to generate informational results.json output in the 
+# proper Gradescope format. The ideal use is that several results.json files are 
+# generated throughout the autograder's run and then they are combined at the very end. 
+# These are created with a score of 0/1 or 0/0 only.
+#
+# NOTE: This script does not write to files. We pipe to a file in shell instead.
+########################################################################################
+
 # Initialize command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("-t", "--title", help="Set result title")
-parser.add_argument("-b", "--body", help="Set result body contents")
-parser.add_argument("-i", "--input", help="Read file as body contents")
-parser.add_argument("-c", "--combine", help="combine all json files in a folder and produce a single output file")
-parser.add_argument("-p", "--passtest", help="Create test with 0/0 points", action='store_true')
+parser.add_argument("-t", "--title", help="Result title")
+parser.add_argument("-b", "--body", help="Result body")
+parser.add_argument("-i", "--input", help="Input file to read as results body instead of --body")
+parser.add_argument("-c", "--combine", help="Combine all the json files in a specified folder and produce a single combined output")
+parser.add_argument("-p", "--passtest", help="Grade the test as 0/0 (passing). If not set, the grade will be 0/1", action='store_true')
 
 args = parser.parse_args()
 
