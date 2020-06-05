@@ -35,6 +35,8 @@ Define the scope of this autograder by editing `grading.config`. Each option sho
 
 
 # Configuring Testing For Student src/main With Instructor Tests
+At a high level, this is accomplished by copying the student's entire `src/main` directory to `staging_main` with instructor provided `pom.xml` and graded tests located at `src/test`. Finally, `mvn test -Dtest=GradescopeTestRunner` runs to automatically find GradedTestClasses and grade the student code.
+
 Delete the sample project from `/staging_main` and copy a full Java project with a `pom.xml` to the staging folder. Edit the `pom.xml` and add the following dependencies:
 ```xml
     <!-- START DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
