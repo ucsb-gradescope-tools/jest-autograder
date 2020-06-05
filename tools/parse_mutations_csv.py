@@ -23,32 +23,36 @@ parser.add_argument("-v", "--verbose", help="Include specific details for the re
 args = parser.parse_args()
 
 if args.reportpath != None and args.max_points != None and args.output != None:
-    killed = 0
-    total = 0
-    verbose_log = ""
-    specific_folder = [x[0] for x in os.walk(args.reportpath)][1]
-    with open(os.path.join(specific_folder, "mutations.csv"), newline='') as csvfile:
-        f = csv.reader(csvfile, delimiter=',')
-        for r in f:
-            total += 1
-            if r[5] == "KILLED":
-                killed += 1
+    try:
+        killed = 0
+        total = 0
+        verbose_log = ""
+        specific_folder = [x[0] for x in os.walk(args.reportpath)][1]
+        with open(os.path.join(specific_folder, "mutations.csv"), newline='') as csvfile:
+            f = csv.reader(csvfile, delimiter=',')
+            for r in f:
+                total += 1
+                if r[5] == "KILLED":
+                    killed += 1
 
-            # Format the mutator for verbose logging
-            mutator = r[2].split('.')
-            mutator = mutator[len(mutator)-1]
+                # Format the mutator for verbose logging
+                mutator = r[2].split('.')
+                mutator = mutator[len(mutator)-1]
 
-            # Format class for verbose logging
-            classname = r[3]
-            if (classname == "<init>"):
-                classname = "Constructor"
-            else:
-                classname += "()"
+                # Format class for verbose logging
+                classname = r[3]
+                if (classname == "<init>"):
+                    classname = "Constructor"
+                else:
+                    classname += "()"
 
-            verbose_log += "[" + r[0] + "] " + r[5] + "\t\t" + mutator + " on " + classname + "\n"
+                verbose_log += "[" + r[0] + "] " + r[5] + "\t\t" + mutator + " on " + classname + "\n"
 
-    score = (killed/total) * float(args.max_points)
-    output = "Correctly identified " + str(killed) + " mutants of " + str(total) + " total mutants"
+        score = (killed/total) * float(args.max_points)
+        output = "Correctly identified " + str(killed) + " mutants of " + str(total) + " total mutants"
+    except:
+        score = 0
+        output = "An error occured while running mutation tests"
     if args.verbose:
         output += ":\n\n" + verbose_log
     the_test = {

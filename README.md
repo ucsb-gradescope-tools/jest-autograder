@@ -87,7 +87,7 @@ An instructor provided pom is required at `staging_test/pom.xml`. Add the follow
 <dependency>
     <groupId>org.pitest</groupId>
     <artifactId>pitest-parent</artifactId>
-    <version>1.1.10</version>
+    <version>1.5.2</version>
     <type>pom</type>
 </dependency>
 
@@ -95,7 +95,7 @@ An instructor provided pom is required at `staging_test/pom.xml`. Add the follow
 <plugin>
     <groupId>org.pitest</groupId>
     <artifactId>pitest-maven</artifactId>
-    <version>1.1.10</version>
+    <version>1.5.2</version>
     <configuration>
         <targetClasses>
             <param>edu.*</param>
