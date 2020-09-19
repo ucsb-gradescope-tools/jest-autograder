@@ -5,11 +5,22 @@ This is a reimplementation of the UCSB maven autograder using a [more modern Jav
 Main idea: Student code is tested by copying their `src/main` directory to an existing maven project (located at `staging/`) with instructor unit tests and running `mvn test` to grade the student's code.
 
 ## File structure:
-- `staging_main/` - The maven project used to run tests. Student code will be copied into `src/main` and the instructor will configure the `pom.xml` and `src/test` classes
-- `staging_test/` - The maven project used to test the student's tests. Student's entire `src` directory will be copied to `staging_test/` and the instructor will provide the `pom.xml`. Student's code will be tested with mutations.
-- `localautograder/` - `run_autograder` automatically looks here instead of `/autograder/` when the script is run on a dev machine. No configuration is necessary for this to work.
+- `staging_main/` - The maven project used to run **instructor** tests. 
+  Student code will be copied into `src/main` and the instructor will configure the `pom.xml` and `src/test` classes
+- `staging_test/` - The maven 
+  project used to **test the student's tests**. Student's entire `src` directory will be copied to `staging_test/` and the instructor will provide the `pom.xml`. Student's test code will be tested against mutations of the students
+own solution.
+- `localautograder/` - This folder is used when doing local testing
+  of the autograder.
+
+  `run_autograder` automatically looks here instead of `/autograder/` when the script is run on a dev machine. No configuration is necessary for this to work.
     - `localautograder/submission` = `/autograder/submission`
+      This folder typically contains a sample solution that you can
+      use to test the autograder locally.   Files in this folder are
+      not copied into the `Autograder.zip` file.
     - `localautograder/results` = `/autograder/results`
+      This folder is where the results are placed when running the 
+      autograder locally to test itl.
 - `tools/` - Contains some useful tools. Read more at [tools/README.md](tools/README.md)
     - `json_generator.py` - Used as a helper to write Gradescope json files from the `run_autograder` script
     - `parse_mutations_csv.py` - Used to parse the results of mutation testing and write results to Gradescope json
