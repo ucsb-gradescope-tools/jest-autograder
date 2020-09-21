@@ -67,6 +67,32 @@ Main idea: Student code is tested by copying their `src/main` directory to an ex
   is being done, however it might be interesting to experiment with results of setting it to false.
 
 
+# Testing multiple student solutions
+
+It is good practice to test your autograder with multiple student solutions, for example:
+
+* A perfect solution, such an instructor reference solution
+* An almost perfect solution, to make sure that test cases catch bugs
+* Various malformed solutions, to ensure that the error messages students will see in Gradescope
+  will be helpful, and not too confusing.
+* A vacuous solution (e.g. an empty solution) to ensure that the intended number of points
+  (possibly zero) is awarded.
+
+To enable this, you can pass an optional parameter to the run_autograder command.  This parameter
+is the name of a directory to use for a sample solution other than `./localautograder/submission`.
+
+For example, you might set up:
+
+* `./localautograder/submission_flat`, a directory where the files are in the top level directory, rather
+  than under /`src/main/java` as they should be.
+* `./localautograder/submission_fail_one_test`, a solution that should fail exactly one of the instructor tests
+
+You can then run these by running:
+* `./run_autograder ./localautograder/submission_flat`
+* `./run_autograder ./localautograder/submission_fail_one_test`
+
+for example.
+
 # Documentation
 
 ## File structure:
