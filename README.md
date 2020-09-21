@@ -4,6 +4,71 @@ This is a reimplementation of the UCSB maven autograder using a [more modern Jav
 
 Main idea: Student code is tested by copying their `src/main` directory to an existing maven project (located at `staging/`) with instructor unit tests and running `mvn test` to grade the student's code.
 
+
+# Quick Start
+
+* Create a new empty private repo for your assignment, e.g. `lab01-AUTOGRADER-PRIVATE`
+* Add this repo as a remote, e.g.
+  ```
+  git remote add starter git@github.com:ucsb-gradescope-tools/maven-autograder.git
+  ```
+* Pull the  repo into yours: `git pull remote main`
+* In `localautograder`, put a sample solution to be checked against the autograder.
+  * Put a sample solution (reference implementation) in `localautograder/submission/src/main`
+  * If you also are testing a student test suite, optionally add a sample student test suite under
+    `localautograder/submission/src/test`
+* In `staging_main`, put your instructor test suite
+  * Tests go into `staging_main/src/test/java`, replacing `/src/test/java/edu/ucsb/gradescope/example/AnimalConstructorTest.java`
+  * The files under `staging_main/src/test/java/autograder` should remain in place unchanged.
+  * You may need to change the `staging_main/pom.xml` if you want to change, for example, the
+    needed dependencies, version of Java, etc.
+* Modify the `grading.config` file according to your preferences (see below.)
+* To test the autograder locally:
+  ```
+  ./run_autograder
+  cat localautograder/results/results.json
+  ```
+* To generate autograder for Gradescope:
+  - run `./tools/make_autograder`
+  - upload `Autograder.zip` to Gradescope
+  - consider adjusting Gradescope settings to maximize memory/CPU if/when doing mutation testing
+* To test on Gradescope:
+  - create a separate repo with a sample solution (e.g. lab00-SOLUTION-PRIVATE)
+  - either submit from GitHub directly, or use the download .zip feature of GitHub and submit that
+
+# Explanation of `grading.config` options
+  
+* `CONFIG_OUTPUT_PASSING_SANITY_TESTS=true` mean you want the zero point sanity checks to run.
+
+  This computes sanity checks such as `Student code successfully compiles without tests` and includes
+  these as "zero point" tests in the student-facing Gradescope output.
+  It is almost always a good idea to set this to `true`.
+
+* `CONFIG_TEST_STUDENT_MAIN=true` means you are testing a student main program against instructor defined
+  graded tests and `pom.xml` located in `staging_main`.
+  
+  Usually `true`; set this to `false` *only* when your assignment is *purely* an assignment to test
+  a student test suite with mutation tests, and nothing else.
+
+* `CONFIG_TEST_STUDENT_TESTS=true`  Set to true to test student's test suite against mutations
+  of their own implementation.  Uses the `pom.xml` under `staging_test`.
+  
+  Set this to `false` for simple assignments where you are not expecting or are not testing the student
+  tests using mutations.
+    
+* `CONFIG_MUTATIONS_MAX_SCORE=50` The value here is used when `CONFIG_TEST_STUDENT_TESTS=true` and indicates
+  the number of points assigned to the mutations testing portion of the grade.   The total points are
+  awarded as a fraction of the total mutants killed by the student's test suite.
+    
+* `CONFIG_MUTATIONS_VERBOSE=true` Output detailed mutant slaying results to Gradescope.
+  If `false`, only the number of mutants killed and number of total mutants will be displayed.
+
+  It is likely a good idea to always set this to true when mutation testing
+  is being done, however it might be interesting to experiment with results of setting it to false.
+
+
+# Documentation
+
 ## File structure:
 - `staging_main/` - The maven project used to run **instructor** tests. 
   Student code will be copied into `src/main` and the instructor will configure the `pom.xml` and `src/test` classes
@@ -27,22 +92,8 @@ own solution.
     - `make_autograder` - Zips only the essential autograder files, leaving out any sample solutions or other files
 
 # Basic Configuration
+
 **NOTE**: Make sure to configure the container specifications to the max level in the Gradescope autograder settings
-
-Define the scope of this autograder by editing `grading.config`. Each option should be set as `true` or `false` (except MAX_SCORE):
-
-* **CONFIG_OUTPUT_PASSING_DEBUG_TESTS**
-    * Set to true to output sanity checks that pass to Gradescope. ie: `Student code successfully compiles without tests`
-
-* **CONFIG_TEST_STUDENT_MAIN**
-    * Set to true to test student's implementation against instructor defined graded test cases and `pom.xml`.
-
-* **CONFIG_TEST_STUDENT_TESTS**
-    * Set to true to test student's test suite against mutations of their own implementation with the instructor `pom.xml`.
-* **CONFIG_MUTATIONS_MAX_SCORE**=NUM
-    * Required if CONFIG_TEST_STUDENT_TESTS=true. The maximum points achievable if a student successfully kills all mutants.
-* **CONFIG_MUTATIONS_VERBOSE**
-    * Output detailed mutant slaying results to Gradescope. If false, only the number of mutants killed and number of total mutants will be displayed.
 
 
 # Configuring Testing For Student src/main With Instructor Tests

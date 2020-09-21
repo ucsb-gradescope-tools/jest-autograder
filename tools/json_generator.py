@@ -34,7 +34,7 @@ if args.input == None and args.title != None:
         max_score = 0
     the_test = {"name": args.title, "max_score": max_score, "score": 0  , "output": bod}
     json_output_as_dict = { "tests" : [ the_test ] }
-    print(json.dumps(json_output_as_dict))
+    print(json.dumps(json_output_as_dict,indent=2,sort_keys=True))
     exit(0)
 
 if args.input != None:
@@ -46,7 +46,7 @@ if args.input != None:
             f = f[-99990:]
         the_test = {"name": args.title, "max_score": 1, "score": 0  , "output": f}
         json_output_as_dict = { "tests" : [ the_test ] }
-        print(json.dumps(json_output_as_dict))
+        print(json.dumps(json_output_as_dict,indent=2,sort_keys=True))
         exit(0)
 
 # Prints out the combination of all json files in the given directory
@@ -63,6 +63,6 @@ if args.combine != None:
                 print("[json_generator] Unable to read", json_file, ", skipping")
     json_output_as_dict = { "tests" : results }
     with open(os.path.join(args.combine, "results.json"), 'w') as outfile:
-        json.dump(json_output_as_dict, outfile)
+        json.dump(json_output_as_dict, outfile,indent=2,sort_keys=True)
     print("Found: ", json_files)
     exit(0)
