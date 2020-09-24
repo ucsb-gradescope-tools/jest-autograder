@@ -67,7 +67,7 @@ if args.reportpath != None and args.max_points != None and args.output != None:
         "output":output
         }
     with open(args.output, 'w') as outfile:
-        json.dump({ "tests" : [ the_test ] }, outfile)
+        json.dump({ "tests" : [ the_test ] }, outfile, sort_keys=True, indent=2)
 
     print("[parse_mutations_csv] Verbose mutation results:")
     print(verbose_log)
