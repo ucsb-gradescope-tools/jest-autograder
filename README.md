@@ -1,9 +1,15 @@
-# Maven Gradescope Autograder
+# Jest Autograder
 
-This is a reimplementation of the UCSB maven autograder using a [more modern Java grading tool - JGrade](https://github.com/tkutcher/jgrade)
+This autograder is intended for use with assignments that use Jest,
+a test framework for JavaScript.
 
-Main idea: Student code is tested by copying their `src/main` directory to an existing maven project (located at `staging/`) with instructor unit tests and running `mvn test` to grade the student's code.
+It borrows heavily from an [autograder written for Maven
+by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), which in turn is based on earlier autograders by Phill Conrad.
 
+
+# BELOW THIS LINE, ORIGINAL README TEXT, PROBABLY OUT OF DATE
+
+<hr></hr>
 
 # Quick Start
 
