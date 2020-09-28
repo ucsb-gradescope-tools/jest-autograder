@@ -74,7 +74,7 @@ rm -rf "$DIR"/staging_main/javascript/node_modules
 
 run_command "npm install" "npm install" "npm_install" "results10.json" 1
 
-run_command "npm run test:json" "Instructor tests" "instuctor_tests" "results11.json" 1
+run_command "npx react-scripts test --json --watchAll=false --outputFile jest-output.json" "Instructor tests" "instuctor_tests" "results11.json" 1
 
 $JEST_JSON_TOOL -i jest-output.json -o "$OUTPUT_DIR"/"results12.json"
 
