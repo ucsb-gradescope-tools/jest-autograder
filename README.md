@@ -19,7 +19,7 @@ by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), wh
   ```
   git remote add starter git@github.com:ucsb-gradescope-tools/maven-autograder.git
   ```
-* Pull the  repo into yours: `git pull remote main`
+* Pull the  repo into yours: `git pull starter main`
 * In `localautograder`, put a sample solution to be checked against the autograder.
   * Put a sample solution (reference implementation) in `localautograder/submission/javascript/src/main`
   * If you also are testing a student test suite, optionally add a sample student test suite under
