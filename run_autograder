@@ -6,7 +6,7 @@ if [ -f "/autograder/harness.py" ]; then
     DIR="/autograder/source"
     OUTPUT_DIR="/autograder/results"
     STUDENT_SUBMISSION_DIR="/autograder/submission"
-else 
+else
     echo "[GS] Running on local dev machine, using ./localautograder/ "
     DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
     OUTPUT_DIR="$DIR/localautograder/results"
@@ -53,16 +53,20 @@ copy_student_directory () {
     then
         echo "[GS] Found student $DIR_TO_COPY directory at $STUDENT_SUBMISSION_JAVA_SRC";
         echo "  [GS] Copying $STUDENT_SUBMISSION_JAVA_SRC to $DESTINATION_JAVA_SRC";
-        rm -r $DESTINATION_JAVA_SRC/*
+        rm -rf $DESTINATION_JAVA_SRC/*
         cp -r $STUDENT_SUBMISSION_JAVA_SRC/* $DESTINATION_JAVA_SRC/
         echo "  [GS] Copy complete!"
+        # Optionally output successful finding of src/main
+        if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+            python3 "$PYTHON_JSON_TOOL" -p -t "Found required $DIR_TO_COPY directory in student submission"> "$OUTPUT_DIR"/results01.json
+        fi
     else
         echo "[GS] Could not find "$DIR_TO_COPY" in unpacked student submission ("$STUDENT_SUBMISSION_DIR"). Exiting...";
         FOUND_FILES=$(ls -R)
 
         # Generate error for results.json
         python3 "$PYTHON_JSON_TOOL" -t "Unable to find "$DIR_TO_COPY" in student submission" -b \
-        "The following files were found in student submission. If no directory structure is displayed, 
+        "The following files were found in student submission. If no directory structure is displayed,
         try compressing your code before submitting it:
         $FOUND_FILES" > "$OUTPUT_DIR"/results00.json
         error_exit
@@ -80,10 +84,8 @@ if [ "$CONFIG_TEST_STUDENT_MAIN" = true ] ; then
     DIRECTORY_SOUGHT="javascript/src/main"
     copy_student_directory "$DIRECTORY_SOUGHT" "$DIR"/staging_main/${DIRECTORY_SOUGHT}
 
-    # Optionally output successful finding of src/main
-    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
-        python3 "$PYTHON_JSON_TOOL" -p -t "Found required $DIRECTORY_SOUGHT directory in student submission"> "$OUTPUT_DIR"/results01.json
-    fi
+    PUBLIC_FOLDER="javascript/public"
+    copy_student_directory "$PUBLIC_FOLDER" "$DIR"/staging_main/${PUBLIC_FOLDER}
 
     "$DIR"/run_main_tests
 
