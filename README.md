@@ -7,7 +7,10 @@ It borrows heavily from an [autograder written for Maven
 by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), which in turn is based on earlier autograders by Phill Conrad.
 
 
-# BELOW THIS LINE, ORIGINAL README TEXT, PROBABLY OUT OF DATE
+# References
+
+* [Jest JSON output documentation](https://jestjs.io/docs/en/configuration#testresultsprocessor-string)
+
 
 # Quick Start
 
@@ -101,6 +104,5 @@ for example.
       autograder locally to test itl.
 - `tools/` - Contains some useful tools. Read more at [tools/README.md](tools/README.md)
     - `json_generator.py` - Used as a helper to write Gradescope json files from the `run_autograder` script
-    - `parse_mutations_csv.py` - Used to parse the results of mutation testing and write results to Gradescope json
     - `make_autograder` - Zips only the essential autograder files, leaving out any sample solutions or other files
 
