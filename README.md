@@ -36,6 +36,21 @@ by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), wh
   ./run_autograder
   cat localautograder/results/results.json
   ```
+  
+  At first, there will be no graded tests.  We'll add those in the next step.
+* Now, visit every jest test in your test suite, and add a prefix to the test label which indicates the number of points.
+  For example, instead of:
+  
+  ```javascript
+      test('(can create a Course object', () => {
+      ...
+  ```
+
+  Use:
+  ```javascript
+      test('(5 pts) can create a Course object', () => {
+      ...
+  ```
 * To generate autograder for Gradescope:
   - run `./tools/make_autograder`
   - upload `Autograder.zip` to Gradescope
