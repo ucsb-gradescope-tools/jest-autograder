@@ -27,7 +27,7 @@ by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), wh
 * In `staging_main`, put your instructor test suite
   * Tests go into `/staging_main/javascript/src/test` replacing
     the files under `/staging_main/javascript/src/test/course`
-  * You may need to change the `staging_main/javascript/package.json` if you want to change, for example, the needed dependencies, etc.
+  * Copy your `package.json` into `staging_main/javascript/package.json`
 * You will likely not need to modify the `grading.config` file in the current
   version, since the defaults are what you will almost always want, but
   there is a reference below in case you do.
