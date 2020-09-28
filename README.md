@@ -9,8 +9,6 @@ by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), wh
 
 # BELOW THIS LINE, ORIGINAL README TEXT, PROBABLY OUT OF DATE
 
-<hr></hr>
-
 # Quick Start
 
 * Create a new empty private repo for your assignment, e.g. `lab01-AUTOGRADER-PRIVATE`
@@ -20,15 +18,16 @@ by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), wh
   ```
 * Pull the  repo into yours: `git pull remote main`
 * In `localautograder`, put a sample solution to be checked against the autograder.
-  * Put a sample solution (reference implementation) in `localautograder/submission/src/main`
+  * Put a sample solution (reference implementation) in `localautograder/submission/javascript/src/main`
   * If you also are testing a student test suite, optionally add a sample student test suite under
-    `localautograder/submission/src/test`
+    `localautograder/submission/javascript/src/test`
 * In `staging_main`, put your instructor test suite
-  * Tests go into `staging_main/src/test/java`, replacing `/src/test/java/edu/ucsb/gradescope/example/AnimalConstructorTest.java`
-  * The files under `staging_main/src/test/java/autograder` should remain in place unchanged.
-  * You may need to change the `staging_main/pom.xml` if you want to change, for example, the
-    needed dependencies, version of Java, etc.
-* Modify the `grading.config` file according to your preferences (see below.)
+  * Tests go into `/staging_main/javascript/src/test` replacing
+    the files under `/staging_main/javascript/src/test/course`
+  * You may need to change the `staging_main/javascript/package.json` if you want to change, for example, the needed dependencies, etc.
+* You will likely not need to modify the `grading.config` file in the current
+  version, since the defaults are what you will almost always want, but
+  there is a reference below in case you do.
 * To test the autograder locally:
   ```
   ./run_autograder
@@ -53,25 +52,8 @@ by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), wh
 * `CONFIG_TEST_STUDENT_MAIN=true` means you are testing a student main program against instructor defined
   graded tests and `pom.xml` located in `staging_main`.
   
-  Usually `true`; set this to `false` *only* when your assignment is *purely* an assignment to test
-  a student test suite with mutation tests, and nothing else.
-
-* `CONFIG_TEST_STUDENT_TESTS=true`  Set to true to test student's test suite against mutations
-  of their own implementation.  Uses the `pom.xml` under `staging_test`.
-  
-  Set this to `false` for simple assignments where you are not expecting or are not testing the student
-  tests using mutations.
-    
-* `CONFIG_MUTATIONS_MAX_SCORE=50` The value here is used when `CONFIG_TEST_STUDENT_TESTS=true` and indicates
-  the number of points assigned to the mutations testing portion of the grade.   The total points are
-  awarded as a fraction of the total mutants killed by the student's test suite.
-    
-* `CONFIG_MUTATIONS_VERBOSE=true` Output detailed mutant slaying results to Gradescope.
-  If `false`, only the number of mutants killed and number of total mutants will be displayed.
-
-  It is likely a good idea to always set this to true when mutation testing
-  is being done, however it might be interesting to experiment with results of setting it to false.
-
+  Usually `true`; unless/until we add mutation testing of student
+  test suites, there is no reason to set this to anything else.
 
 # Testing multiple student solutions
 
@@ -102,11 +84,10 @@ for example.
 # Documentation
 
 ## File structure:
+
 - `staging_main/` - The maven project used to run **instructor** tests. 
-  Student code will be copied into `src/main` and the instructor will configure the `pom.xml` and `src/test` classes
-- `staging_test/` - The maven 
-  project used to **test the student's tests**. Student's entire `src` directory will be copied to `staging_test/` and the instructor will provide the `pom.xml`. Student's test code will be tested against mutations of the students
-own solution.
+  Student code will be copied into `javascript/src/main` and the instructor will configure the `javascript/package.json` and `javascript/src/test` classes
+
 - `localautograder/` - This folder is used when doing local testing
   of the autograder.
 
@@ -123,102 +104,3 @@ own solution.
     - `parse_mutations_csv.py` - Used to parse the results of mutation testing and write results to Gradescope json
     - `make_autograder` - Zips only the essential autograder files, leaving out any sample solutions or other files
 
-# Basic Configuration
-
-**NOTE**: Make sure to configure the container specifications to the max level in the Gradescope autograder settings
-
-
-# Configuring Testing For Student src/main With Instructor Tests
-At a high level, this is accomplished by copying the student's entire `src/main` directory to `staging_main` with instructor provided `pom.xml` and graded tests located at `src/test`. Finally, `mvn test -Dtest=GradescopeTestRunner` runs to automatically find GradedTestClasses and grade the student code.
-
-Delete the sample project from `/staging_main` and copy a full Java project with a `pom.xml` to the staging folder. Edit the `pom.xml` and add the following dependencies:
-```xml
-    <!-- START DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
-    <dependency>
-        <groupId>com.github.tkutcher</groupId>
-        <artifactId>jgrade</artifactId>
-        <version>1.0</version>
-        <scope>system</scope>
-        <systemPath>${project.basedir}/../lib/jgrade.jar</systemPath>
-    </dependency>
-    <dependency>
-        <groupId>org.reflections</groupId>
-        <artifactId>reflections</artifactId>
-        <version>0.9.12</version>
-    </dependency>
-    <!-- END DEPENDENCIES FOR GRADESCOPE AUTOGRADER -->
-```
-
-Next, copy the `autograder` package from `lib/autograder` to `staging_main/src/test/java/autograder`, i.e. from root of the repo, do:
-
-```
-cp -r lib/autograder staging_main/src/test/java 
-```
-
-This contains the `GradescopeTestRunner` that will be called to run the tests, as well as the `GradescopeTestClass` annotation that will be used to identify Gradescope tests. Neither of these files need to be touched.
-
-## Writing Graded Tests
-Add the `@GradescopeTestClass` annotation to **classes** that should be picked up by the autograder.
-
-Add `@Test` and `@GradedTest` annotations to each **test method**.
-
-Here is a simple example test class:
-```java
-import autograder.GradescopeTestClass;
-import com.github.tkutcher.jgrade.gradedtest.GradedTest;
-import org.junit.Test;
-
-@GradescopeTestClass
-public class SampleTest {
-    @Test
-    @GradedTest(name="Some test title", points=100)
-    public void testDefaultConstructor() {
-        assert(15 == 15);
-    }
-}
-```
-Note: the `name=""` field is required, otherwise the test will display on Gradescope as "Unnamed test". This is due to jgrade's implementation, but this is a good idea for a fork of jgrade (or vscode plugin) in the future.
-
-# Configuring Testing For Student src/test
-To test the student's test suite, we will use mutation testing. At a high level, this is accomplished by copying their entire `src` submission to `staging_test` with an instructor provided `pom.xml` and running `mvn org.pitest:pitest-maven:mutationCoverage`.
-
-## Setup the pom.xml
-An instructor provided pom is required at `staging_test/pom.xml`. Add the following to the pom.xml:
-```XML
-<!-- REQUIRED DEPENDENCY FOR MUTATION TESTING -->
-<dependency>
-    <groupId>org.pitest</groupId>
-    <artifactId>pitest-parent</artifactId>
-    <version>1.5.2</version>
-    <type>pom</type>
-</dependency>
-
-<!-- REQUIRED PLUGIN FOR MUTATION TESTING -->
-<plugin>
-    <groupId>org.pitest</groupId>
-    <artifactId>pitest-maven</artifactId>
-    <version>1.5.2</version>
-    <configuration>
-        <!-- Classes to mutate-->
-        <targetClasses>
-            <param>edu.*</param>
-        </targetClasses>
-        <!-- Test classes to mutate instances of above classes -->
-        <targetTests>
-            <param>edu.*</param>
-        </targetTests>
-        <outputFormats>
-            <outputFormat>HTML</outputFormat>
-            <outputFormat>CSV</outputFormat>
-        </outputFormats>
-        <!-- Define extra time so Spring Boot tests don't time out-->
-        <timeoutConstant>30000</timeoutConstant>
-    </configuration>
-</plugin>
-```
-
-That's it! Just make sure the `grading.config` has a proper points value assigned and that `CONFIG_TEST_STUDENT_TESTS=true` is set.
-
-
-# Deployment
-Run `tools/make_autograder`. This will remove the `staging_main/src/main` folder, and zip the necessary files to upload to Gradescope. The final `Autograder.zip` file will appear in the root of the directory.

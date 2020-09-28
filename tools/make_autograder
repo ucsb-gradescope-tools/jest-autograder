@@ -14,6 +14,11 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && cd ../ && pwd )
 
 cd $DIR
 
+
+echo "Removing node_modules directories"
+find . -name node_modules -ls -and -exec /bin/rm -rf {} \;
+
+
 find . -name ".DS_Store" -exec rm -rf {} \;
 rm -f "$DIR"/Autograder.zip
 rm -rf "$DIR"/staging_main/src/main/java/*

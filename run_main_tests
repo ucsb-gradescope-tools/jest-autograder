@@ -1,5 +1,47 @@
 #!/usr/bin/env bash
 
+
+# Searches student code for a DIR_TO_COPY($1), and copies it to DESTINATION_JAVA_SRC($2)
+# Called below
+run_command () {
+    COMMAND_TO_RUN=$1
+    COMMAND_LABEL=$2
+    COMMAND_TMP_FILE_NAME=$3
+    RESULTS_FILE_NAME=$4
+    SKIP_SUCCESS_CHECK=$5
+
+    pwd
+    ls -al
+
+    # Try to compile the maven project
+    $COMMAND_TO_RUN | tee "/tmp/${COMMAND_TMP_FILE_NAME}.out"
+
+    if [ ${SKIP_SUCCESS_CHECK} -eq 1 ]
+    then
+            echo "[GS - Main Tests] ${COMMAND_LABEL} completed."
+
+            # Optionally output successful mvn compile message
+            if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+                python3 "$PYTHON_JSON_TOOL" -p -t "Step ${COMMAND_LABEL} completed with status ${PIPESTATUS[0]}"> "$OUTPUT_DIR"/"$RESULTS_FILE_NAME"
+            fi
+    else
+        if [ ${PIPESTATUS[0]} -eq 0 ]
+        then
+            echo "[GS - Main Tests] ${COMMAND_LABEL} successful!"
+
+            # Optionally output successful mvn compile message
+            if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
+                python3 "$PYTHON_JSON_TOOL" -p -t "Step ${COMMAND_LABEL} successful"> "$OUTPUT_DIR"/"$RESULTS_FILE_NAME"
+            fi
+        else
+            echo "[GS - Main Tests] ${COMMAND_LABEL} failed! Exiting..."
+            python3 "$PYTHON_JSON_TOOL" -t "Step ${COMMAND_LABEL} failed" -i "/tmp/${COMMAND_TMP_FILE_NAME}.out" > "$OUTPUT_DIR"/"$RESULTS_FILE_NAME"
+        fi
+    fi
+}
+
+
+
 # START: Sets correct directories based on local dev machine vs Gradescope production
 if [ -f "/autograder/harness.py" ]; then
     echo "[GS] Running on Gradescope container, using Gradescope vars"
@@ -13,6 +55,8 @@ else
     STUDENT_SUBMISSION_DIR="$DIR/localautograder/submission"
 fi
 PYTHON_JSON_TOOL="$DIR/tools/json_generator.py"
+JEST_JSON_TOOL="$DIR/tools/jest_to_gradescope.py"
+
 source "$DIR"/grading.config
 # END: Sets correct directories based on local dev machine vs Gradescope production
 
@@ -24,56 +68,13 @@ source "$DIR"/grading.config
 #
 ###########################################################################################
 
-cd "$DIR"/staging_main
-rm -rf "$DIR"/staging_main/target
+cd "$DIR"/staging_main/javascript
 
-# Try to compile the maven project
-mvn -B compile | tee /tmp/compile.out
-if [ ${PIPESTATUS[0]} -eq 0 ]
-then
-    echo "[GS - Main Tests] mvn compile successful!"
+rm -rf "$DIR"/staging_main/javascript/node_modules
 
-    # Optionally output successful mvn compile message
-    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
-        python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles without tests"> "$OUTPUT_DIR"/results10.json
-    fi
-else
-    echo "[GS - Main Tests] mvn compile failed! Exiting..."
-    python3 "$PYTHON_JSON_TOOL" -t "mvn compile failed" -i /tmp/compile.out > "$OUTPUT_DIR"/results10.json
-    exit 1;
-fi
+run_command "npm install" "npm install" "npm_install" "results10.json" 1
 
+run_command "npm run test:json" "Instructor tests" "instuctor_tests" "results11.json" 1
 
+$JEST_JSON_TOOL -i jest-output.json -o "$OUTPUT_DIR"/"results12.json"
 
-# Compile tests
-# This helps students debug because an empty project will compile, but tests won't even run
-# (this will reveal if students are missing files that test cases rely on and output the missing classes)
-# This step also catches issues with student implementation where they might change the input parameters to a function
-# (Shows the student Symbol: or location: error messages but nothing else)
-mvn -B test -DskipTests | tee /tmp/compile.out
-if [ ${PIPESTATUS[0]} -eq 0 ]
-then
-    echo "[GS - Main Tests] mvn test -DskipTests successful!"
-
-    # Optionally output successful mvn test -DskipTests message
-    if [ "$CONFIG_OUTPUT_PASSING_SANITY_TESTS" = true ] ; then
-        python3 "$PYTHON_JSON_TOOL" -p -t "Student code successfully compiles with tests"> "$OUTPUT_DIR"/results11.json
-    fi
-
-else
-    echo "[GS - Main Tests] mvn test -DskipTests failed! Exiting..."
-    MISSING_SYMBOLS=$(grep '[ERROR].*symbol:\|location' /tmp/compile.out | sort | uniq)
-
-    # Generate error results.json
-    python3 $PYTHON_JSON_TOOL -t "Compile with tests failed" -b "Student code compiles on its own, but does not compile with test cases.
-    Some required classes may be missing, or some function definitions may be mismatched from the specifications:
-    "$MISSING_SYMBOLS > "$OUTPUT_DIR"/results11.json
-
-    exit 1;
-fi
-
-
-
-# run mvn test
-echo "[GS - Main Tests] Running maven tests"
-mvn -B test -Dtest=GradescopeTestRunner -DAUTOGRADER_RESULTS="$OUTPUT_DIR"/results12.json

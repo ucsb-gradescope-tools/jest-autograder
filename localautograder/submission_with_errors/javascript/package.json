@@ -1,0 +1,53 @@
+{
+  "name": "intro-to-javascript",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.0.4",
+    "@testing-library/user-event": "^12.1.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "coverage": "react-scripts test --env=jsdom-fourteen --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "test:json": "react-scripts test --json --watchAll=false --outputFile jest-output.json",
+  },
+  "jest": {
+    "resetMocks": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/node_modules/",
+      "!src/serviceWorker.js",
+      "!src/setupTests.js",
+      "!src/components/Auth/*",
+      "!src/index.js"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,3 +1,9 @@
+
+jest-output.json
+
+node_modules
+build
+
 target/
 pom.xml.tag
 pom.xml.releaseBackup

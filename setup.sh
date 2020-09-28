@@ -3,6 +3,7 @@
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
 apt install -y openjdk-11-jdk
+apt install -y node
 
 apt-get -y install rsync
 apt-get -y install maven
