@@ -38,7 +38,7 @@ by Cole Bergmann](https://github.com/ucsb-gradescope-tools/maven-autograder), wh
   ```
   
   At first, there will be no graded tests.  We'll add those in the next step.
-* Now, visit every jest test in your test suite, and add a prefix to the test label which indicates the number of points.
+* The instructor tests are the ones that live under `staging_main/javascript/src/test`.  So in that directory, visit every jest test in your test suite, and for each test that you want to be graded, add a prefix to the test label which indicates the number of points.
   For example, instead of:
   
   ```javascript
