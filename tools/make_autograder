@@ -21,8 +21,6 @@ find . -name node_modules -ls -and -exec /bin/rm -rf {} \;
 
 find . -name ".DS_Store" -exec rm -rf {} \;
 rm -f "$DIR"/Autograder.zip
-rm -rf "$DIR"/staging_main/src/main/java/*
-rm -rf "$DIR"/staging_main/target/
-rm -rf "$DIR"/staging_test/src/*
-rm -rf "$DIR"/staging_test/target/
+rm -rf "$DIR"/staging_main/javascript/src/main/*
+rm -rf "$DIR"/staging_test/javascript/src/*
 zip -r Autograder.zip . -x "localautograder/*" "*.git*"
